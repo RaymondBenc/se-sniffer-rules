@@ -1,1 +1,1 @@
-# se-sniffer-rules
+# socialengine-cli

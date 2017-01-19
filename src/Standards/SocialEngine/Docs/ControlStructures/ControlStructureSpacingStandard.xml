@@ -1,0 +1,23 @@
+<documentation title="Control Structure Spacing">
+    <standard>
+    <![CDATA[
+    Control Structures should have 1 space after opening parentheses and 1 space before closing parentheses.
+    ]]>
+    </standard>
+    <code_comparison>
+        <code title="Valid: Whitespace used inside the parentheses.">
+            <![CDATA[
+if(<em> </em>$foo<em> </em>) {
+    $var = 1;
+}
+        ]]>
+        </code>
+        <code title="Invalid: Correct spacing.">
+        <![CDATA[
+if (<em></em>$foo<em></em>) {
+    $var = 1;
+}
+        ]]>
+        </code>
+    </code_comparison>
+</documentation>

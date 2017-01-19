@@ -1,0 +1,13 @@
+{
+    "name": "socialengine/socialengine-cli",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "RaymondBenc",
+            "email": "ray@socialengine.com"
+        }
+    ],
+    "require": {
+        "squizlabs/php_codesniffer": "^2.7"
+    }
+}

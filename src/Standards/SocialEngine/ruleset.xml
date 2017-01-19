@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="SocialEngine">
+    <description>Social Engine Standards based on Zend</description>
+    <rule ref="Zend">
+        <exclude name="PEAR.ControlStructures.ControlSignature" />
+        <exclude name="PEAR.WhiteSpace.ScopeClosingBrace.BreakIndent" />
+        <exclude name="PEAR.Functions.FunctionCallSignature" />
+        <exclude name="Generic.Files.LineLength.TooLong" />
+        <exclude name="Generic.Files.LineLength.MaxExceeded" />
+        <exclude name="Generic.Files.LineEndings.InvalidEOLChar" />
+        <exclude name="Zend.Files.ClosingTag.NotAllowed" />
+        <exclude name="Zend.NamingConventions.ValidVariableName" />
+    </rule>
+    <rule ref="PSR2.ControlStructures.ElseIfDeclaration" />
+</ruleset>
