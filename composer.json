@@ -1,6 +1,7 @@
 {
     "name": "raymondbenc/socialengine-console",
     "license": "MIT",
+    "version": "1.0.0",	
     "authors": [
         {
             "name": "RaymondBenc",
