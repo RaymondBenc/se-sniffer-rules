@@ -1,1 +1,1 @@
-# socialengine-cli
+# Social Engine Console
