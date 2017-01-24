@@ -12,10 +12,7 @@ class Clean extends Command
 
   public function process()
   {
-    $base = rtrim($this->getConfigValue('path'), '/') . '/';
-    if (!is_dir($base)) {
-      throw new \Exception('Not a valid directory to work with: ' . $base);
-    }
+    $base = SE_CONSOLE_DIR;
 
     if (!file_exists($base . 'application/libraries/Engine/Api.php')) {
       throw new \Exception('Does not seem like SE resides here.');
