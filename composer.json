@@ -17,7 +17,9 @@
 			"SocialEngine\\Console\\": "src/"
 		}
 	},
-	"bin": [
-		"bin/socialengine"
-	]
+	"scripts": {
+		"post-install-cmd": [
+			"SocialEngine\\Console\\Composer::postPackageInstall"
+		]
+	}
 }

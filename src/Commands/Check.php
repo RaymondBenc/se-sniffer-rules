@@ -15,11 +15,9 @@ class Check extends Command
 
   public function process()
   {
-    $base = rtrim($this->getConfigValue('path'), '/') . '/';
     $standards = dirname(dirname(__FILE__)) . '/Standards/SocialEngine/';
     $bin = $this->getBin('php') . ' ' . $this->getBin('phpcs') . ' --standard="' . $standards . '" ';
 
-    chdir($base);
     $files = explode("\n", $this->git('ls-tree --full-tree --name-only -r HEAD'));
     foreach ($files as $file) {
       $file = trim($file);
@@ -28,7 +26,7 @@ class Check extends Command
       }
 
       if (substr($file, -4) == '.php') {
-        $this->write($this->exec($bin . ' ' . $base . $file));
+        $this->write($this->exec($bin . ' ' . SE_CONSOLE_DIR . $file));
       }
     }
   }

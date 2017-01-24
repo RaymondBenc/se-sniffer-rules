@@ -39,17 +39,15 @@ abstract class Command
   public $arguments = [];
 
   /**
-   * Object of local configuration based on SE work env.
-   *
-   * @var mixed
-   */
-  private $config;
-
-  /**
    * @var SymfonyCommand
    */
   private $symfony;
 
+  /**
+   * Local bin paths
+   *
+   * @var array
+   */
   private $bin = [
     'git' => 'git',
     'php' => 'php',
@@ -58,11 +56,6 @@ abstract class Command
 
   public function __construct()
   {
-    $path = $this->getConfigPath();
-    if (file_exists($path)) {
-      $this->config = json_decode(file_get_contents($path));
-    }
-
     if (empty($this->name)) {
       throw new \Exception('Provide a name for your command: ' . get_called_class());
     }
@@ -91,38 +84,6 @@ abstract class Command
   protected function get($key)
   {
     return $this->symfony->input->getArgument($key);
-  }
-
-  /**
-   * Get a workable config path that we can access.
-   *
-   * @return string
-   */
-  protected function getConfigPath()
-  {
-    $config = $_SERVER['PWD'] . '/.se-console-config';
-
-    return $config;
-  }
-
-  /**
-   * Load config value
-   *
-   * @param string $key Name of the config value.
-   * @return mixed
-   * @throws \Exception
-   */
-  protected function getConfigValue($key)
-  {
-    if (!$this->config) {
-      throw new \Exception('Configuration file not set.');
-    }
-
-    if (!isset($this->config->{$key})) {
-      throw new \Exception('Unable to find this option: ' . $key);
-    }
-
-    return $this->config->{$key};
   }
 
   /**
@@ -176,7 +137,7 @@ abstract class Command
     }
 
     if ($program == 'phpcs') {
-      return Console::$vendor . 'bin/phpcs';
+      return SE_CONSOLE_DIR . 'application/vendor/bin/phpcs';
     }
 
     return $this->bin[$program];

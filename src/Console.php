@@ -16,18 +16,13 @@ class Console
 {
   const VERSION = '1.0.0';
 
-  public static $vendor;
-
   public function __construct()
   {
-    $path = __DIR__ . '/../vendor/';
-    if (is_dir($path)) {
-      self::$vendor = $path;
-    } else {
-      self::$vendor = __DIR__ . '/../../vendor/';
-    }
-
     try {
+      if (!defined('SE_CONSOLE_DIR')) {
+        throw new \Exception('Constant "SE_CONSOLE_DIR" must be defined.');
+      }
+
       $app = new Application('Social Engine Console', self::VERSION);
       $dir = __DIR__ . '/Commands/';
       foreach( scandir($dir) as $command ) {
