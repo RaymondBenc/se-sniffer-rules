@@ -1,7 +1,7 @@
 {
     "name": "raymondbenc/socialengine-console",
     "license": "MIT",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "authors": [
         {
             "name": "RaymondBenc",
@@ -19,7 +19,7 @@
 		}
 	},
 	"scripts": {
-		"post-install-cmd": [
+		"post-package-install": [
 			"SocialEngine\\Console\\Composer::postPackageInstall"
 		]
 	}
