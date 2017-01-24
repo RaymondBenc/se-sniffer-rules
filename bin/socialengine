@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-define('SE_CONSOLE_DIR', __DIR__ . '/');
+define('SE_CONSOLE_DIR', __DIR__ . '/../../../');
 
-require(__DIR__ . '/application/vendor/autoload.php');
+require(__DIR__ . '/../autoload.php');
 
 new SocialEngine\Console\Console;
