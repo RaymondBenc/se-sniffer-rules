@@ -14,7 +14,7 @@ use Symfony\Component\Console\Application;
  */
 class Console
 {
-  const VERSION = '1.0.0';
+  const VERSION = '1.0.4';
 
   public function __construct()
   {
