@@ -15,7 +15,7 @@ class Check extends Command
 
   public function process()
   {
-    $standards = dirname(dirname(__FILE__)) . '/Standards/SocialEngine/';
+    $standards = SE_CONSOLE_DIR . '/application/vendor/raymondbenc/socialengine-coding-standards/SocialEngine/';
     $bin = $this->getBin('php') . ' ' . $this->getBin('phpcs') . ' --standard="' . $standards . '" ';
 
     $files = explode("\n", $this->git('ls-tree --full-tree --name-only -r HEAD'));

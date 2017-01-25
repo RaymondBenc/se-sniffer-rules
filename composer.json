@@ -1,7 +1,7 @@
 {
     "name": "raymondbenc/socialengine-console",
     "license": "MIT",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "authors": [
         {
             "name": "RaymondBenc",
@@ -10,7 +10,7 @@
     ],
     "require": {
         "squizlabs/php_codesniffer": "^2.7",
-	    "raymondbenc/socialengine-coding-standards": "^1.0",
+	    "raymondbenc/socialengine-coding-standards": "^1.0.2",
         "symfony/console": "^3.2"
     },
 	"autoload": {
