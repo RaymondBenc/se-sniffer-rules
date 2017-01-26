@@ -20,3 +20,6 @@ before_script:
 
 script:
   - vendor/bin/phpcs --standard=PSR2 -n src
+
+after_success:
+  - build/scripts/publish.sh
