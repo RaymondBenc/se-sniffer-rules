@@ -31,3 +31,5 @@ cd ../
 rm -rf tmp/
 
 # composer config version "$NEW_VERSION"
+
+echo "testing PR"
