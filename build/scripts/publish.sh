@@ -17,7 +17,6 @@ git clone https://$GITHUB_USER_NAME:$GITHUB_TOKEN@github.com/RaymondBenc/sociale
 git config --global user.email $GITHUB_USER_EMAIL
 git config --global user.name $GITHUB_USER_NAME
 git remote set-url origin https://$GITHUB_USER_NAME:$GITHUB_TOKEN@github.com/SocialEngine/phpfox-importer.git
-git checkout -b $RELEASE_BRANCH origin/$MASTER
 
 # Create a new version
 CURRENT_VERSION=$(composer config version)
@@ -27,6 +26,9 @@ MINOR_VERSION=$((components[1]+1))
 NEW_VERSION="$MAJOR_VERSION.$MINOR_VERSION"
 RELEASE_BRANCH="release/$NEW_VERSION"
 MASTER="master"
+
+# Create a new release branch
+git checkout -b $RELEASE_BRANCH origin/$MASTER
 
 # Update composer.json
 echo "Incrementing version to: $NEW_VERSION"
