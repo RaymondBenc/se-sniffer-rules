@@ -17,6 +17,11 @@ class Console
     public function __construct()
     {
         try {
+            if (isset($foo))
+            {
+                echo "testing psr failure";   
+            }
+            
             if (!defined('SE_CONSOLE_DIR')) {
                 throw new \Exception('Constant "SE_CONSOLE_DIR" must be defined.');
             }
