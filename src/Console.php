@@ -12,7 +12,7 @@ use Symfony\Component\Console\Application;
  */
 class Console
 {
-    const VERSION = '1.0.5';
+    public static $version;
 
     public function __construct()
     {
@@ -21,9 +21,11 @@ class Console
                 throw new \Exception('Constant "SE_CONSOLE_DIR" must be defined.');
             }
 
+            self::$version = trim(file_get_contents(__DIR__ . '/.version'));
+
             $this->register();
 
-            $app = new Application('Social Engine Console', self::VERSION);
+            $app = new Application('Social Engine Console', self::$version);
             $dir = __DIR__ . '/Commands/';
             foreach (scandir($dir) as $command) {
                 if ($command == '.' || $command == '..') {
