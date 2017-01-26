@@ -2,9 +2,10 @@
 
 # Check to make sure that our build environment is right.
 test -n "$TRAVIS" || { echo "This script is only designed to be run on Travis."; exit 1; }
+test -n "$GITHUB_TOKEN" || { echo "GITHUB_TOKEN environment variable must be set to run this script."; exit 1; }
 test "${TRAVIS_BRANCH}" == "master" || { echo "Skipping build, we only work with the master branch"; exit 0; }
 test "${TRAVIS_PHP_VERSION:0:3}" == "5.6" || { echo "Skipping for PHP $TRAVIS_PHP_VERSION -- only update for PHP 5.6 build."; exit 0; }
-test -n "$GITHUB_TOKEN" || { echo "GITHUB_TOKEN environment variable must be set to run this script."; exit 1; }
+test "${TRAVIS_PULL_REQUEST}" == false || { echo "Skipping pull request from building."; exit 0; }
 
 # Create work env
 rm -rf tmp/
@@ -30,4 +31,4 @@ echo "Incrementing version to: $NEW_VERSION"
 cd ../
 rm -rf tmp/
 
-# composer config version "$NEW_VERSION"
+composer config version "$NEW_VERSION"
