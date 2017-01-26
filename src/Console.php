@@ -19,7 +19,11 @@ class Console
         try {
             if (isset($foo))
             {
-                echo "testing psr failure";   
+                echo "testing psr failure";
+            }
+
+            if( isset($bar) ) {
+                echo "another test failure";
             }
             
             if (!defined('SE_CONSOLE_DIR')) {
