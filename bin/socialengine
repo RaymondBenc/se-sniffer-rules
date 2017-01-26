@@ -1,8 +1,4 @@
 #!/usr/bin/env php
 <?php
 
-define('SE_CONSOLE_DIR', dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))) . '/');
-
-require(SE_CONSOLE_DIR . '/application/vendor/autoload.php');
-
-new SocialEngine\Console\Console;
+require(__DIR__ . '/socialengine.php');
