@@ -21,7 +21,8 @@ class Console
                 throw new \Exception('Constant "SE_CONSOLE_DIR" must be defined.');
             }
 
-            self::$version = trim(file_get_contents(__DIR__ . '/.version'));
+            $composer = json_decode(file_get_contents(__DIR__ . '/../composer.json'));
+            self::$version = $composer->version;
 
             $this->register();
 
