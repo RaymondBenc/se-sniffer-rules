@@ -5,6 +5,7 @@ namespace SocialEngine\Console;
 use Symfony\Component\Console\Command\Command as BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class SymfonyCommand
@@ -16,60 +17,126 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SymfonyCommand extends BaseCommand
 {
-  /**
-   * @var InputInterface
-   */
-  public $input;
+    /**
+     * @var InputInterface
+     */
+    public $input;
 
-  /**
-   * @var OutputInterface
-   */
-  public $output;
+    /**
+     * @var OutputInterface
+     */
+    public $output;
 
-  /**
-   * @var Command
-   */
-  private $command;
+    /**
+     * @var Command
+     */
+    private $command;
 
-  /**
-   * SymfonyCommand constructor.
-   * @param Command $command
-   */
-  public function __construct(Command $command)
-  {
-    $this->command = $command;
+    /**
+     * @var \ReflectionClass
+     */
+    private $reflection;
 
-    parent::__construct();
-  }
+    /**
+     * Parent class name
+     *
+     * @var string
+     */
+    private $name;
 
-  /**
-   * Creating configuration based on $this->command values,
-   * which will get passed along to Symfony Command.
-   */
-  protected function configure()
-  {
-    $this->setName($this->command->name);
-    $this->setDescription($this->command->description);
+    /**
+     * Map that connects the command to the correct class method.
+     *
+     * @var array
+     */
+    private $map = [];
 
-    if ($this->command->arguments) {
-      foreach ($this->command->arguments as $argument) {
-        $this->addArgument($argument);
-      }
+    /**
+     * SymfonyCommand constructor.
+     *
+     * @param string $name
+     * @param \ReflectionClass $reflection
+     * @param Command $command
+     */
+    public function __construct($name, \ReflectionClass $reflection, Command $command)
+    {
+        $this->reflection = $reflection;
+        $this->command = $command;
+        $this->name = $name;
+
+        parent::__construct();
     }
-  }
 
-  /**
-   * Execute a command via Symfony and pass along input/output objects.
-   *
-   * @param InputInterface $input
-   * @param OutputInterface $output
-   * @return bool TRUE on success or FALSE on failure.
-   */
-  protected function execute(InputInterface $input, OutputInterface $output)
-  {
-    $this->output = $output;
-    $this->input = $input;
+    /**
+     * Creating configuration based on doc comments for each method.
+     */
+    protected function configure()
+    {
+        $methods = $this->reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+        foreach ($methods as $method) {
+            if ($method->class == $this->name) {
+                $docComments = $method->getDocComment();
 
-    return $this->command->process();
-  }
+                if (empty($docComments)) {
+                    throw new \Exception('Missing doc comments for this method: ' .
+                        $method->class . '::' . $method->getName());
+                }
+
+                $comments = explode("\n", $docComments);
+                foreach ($comments as $comment) {
+                    $comment = trim(str_replace('*', '', $comment));
+                    if (substr($comment, 0, 5) == '@cli-') {
+                        $parts = explode(' ', trim(explode('@cli-', $comment)[1]));
+                        $name = trim($parts[0]);
+                        unset($parts[0]);
+                        $data = implode(' ', $parts);
+
+                        switch ($name) {
+                            case 'command':
+                                $this->setName($data);
+                                if (!isset($this->map[$this->name])) {
+                                    $this->map[$this->name] = [];
+                                }
+                                $this->map[$this->name][$data] = $method->getName();
+                                break;
+                            case 'info':
+                                $this->setDescription($data);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!$this->getName()) {
+            throw new \Exception('Missing a name for: ' . $this->name);
+        }
+
+        $this->addOption('path', null, InputOption::VALUE_OPTIONAL, 'Path to SE.', null);
+        $this->addOption('v', null, InputOption::VALUE_OPTIONAL, 'Enable verbose');
+    }
+
+    /**
+     * Execute a command via Symfony and pass along input/output objects.
+     *
+     * @throws \Exception
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return mixed
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->output = $output;
+        $this->input = $input;
+
+        if (!isset($this->map[$this->name])) {
+            throw new \Exception('Class "' . $this->name . '" is missing from command map.');
+        }
+
+        $method = $this->map[$this->name][$this->getName()];
+
+        return $this->command->$method();
+    }
 }

@@ -6,26 +6,38 @@ use SocialEngine\Console\Command;
 
 class Clean extends Command
 {
-  public $name = 'clean';
+    /**
+     * @throws \Exception
+     * @cli-command clean
+     * @cli-info Reset your Social Engine script to a clean state.
+     */
+    public function process()
+    {
+        $base = SE_CONSOLE_DIR;
 
-  public $description = 'Reset your Social Engine script to a clean state.';
+        if (!file_exists($base . 'application/libraries/Engine/Api.php')) {
+            throw new \Exception('Does not seem like SE resides here.');
+        }
 
-  public function process()
-  {
-    $base = SE_CONSOLE_DIR;
+        $remove = [
+            'application/settings/database.php'
+        ];
 
-    if (!file_exists($base . 'application/libraries/Engine/Api.php')) {
-      throw new \Exception('Does not seem like SE resides here.');
+        foreach ($remove as $file) {
+            $this->exec('rm -f ' . $base . $file);
+        }
+
+        $packages = $base . 'application/packages/';
+        foreach (scandir($packages) as $package) {
+            if ($package == '.' || $package == '..') {
+                continue;
+            }
+
+            if (substr($package, -5) == '.json') {
+                $this->exec('rm -f ' . $packages . $package);
+            }
+        }
+
+        $this->write('Done!');
     }
-
-    $remove = [
-      'application/settings/database.php'
-    ];
-
-    foreach ($remove as $file) {
-      $this->exec('rm -f ' . $base . $file);
-    }
-
-    $this->write('Done!');
-  }
 }
