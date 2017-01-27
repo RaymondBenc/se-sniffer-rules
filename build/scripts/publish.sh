@@ -13,10 +13,10 @@ mkdir release
 cd release/
 
 # Clone it
-git clone https://$GITHUB_USER_NAME:$GITHUB_TOKEN@github.com/SocialEngine/socialengine-console.git .
+git clone https://$GITHUB_USER_NAME:$GITHUB_TOKEN@github.com/RaymondBenc/socialengine-console.git .
 git config --global user.email $GITHUB_USER_EMAIL
 git config --global user.name $GITHUB_USER_NAME
-git remote set-url origin https://$GITHUB_USER_NAME:$GITHUB_TOKEN@github.com/SocialEngine/socialengine-console.git
+git remote set-url origin https://$GITHUB_USER_NAME:$GITHUB_TOKEN@github.com/RaymondBenc/socialengine-console.git
 git branch
 ls -ala
 
