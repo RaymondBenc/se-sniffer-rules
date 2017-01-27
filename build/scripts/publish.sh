@@ -6,6 +6,10 @@ test -n "$GITHUB_TOKEN" || { echo "GITHUB_TOKEN environment variable must be set
 test "${TRAVIS_BRANCH}" == "master" || { echo "Skipping build, we only work with the master branch"; exit 0; }
 test "${TRAVIS_PHP_VERSION:0:3}" == "5.6" || { echo "Skipping for PHP $TRAVIS_PHP_VERSION -- only update for PHP 5.6 build."; exit 0; }
 test "${TRAVIS_PULL_REQUEST}" == false || { echo "Skipping pull request from building."; exit 0; }
+test "${TRAVIS_COMMIT_MESSAGE:0:12}" != "Incrementing" || { echo "Skipping increment commit"; exit 0; }
+
+echo "Commit Message: ${TRAVIS_COMMIT_MESSAGE}"
+echo "Commit Message Trimmed: ${TRAVIS_COMMIT_MESSAGE:0:12}"
 
 # Work env
 rm -rf release
@@ -35,10 +39,9 @@ composer config version "$NEW_VERSION"
 # Add new version and merge
 git add --all
 git commit -m "Incrementing version to $NEW_VERSION [$TRAVIS_BUILD_NUMBER]"
-git tag v$NEW_VERSION -m "Autobuild [$NEW_VERSION][$TRAVIS_BUILD_NUMBER]" $MASTER
+git tag v$NEW_VERSION -m "Autobuild [$NEW_VERSION][$TRAVIS_BUILD_NUMBER]"
 
 # Push to github
-git push -u origin $MASTER
-git push -u origin refs/tags/v$NEW_VERSION
+git push origin $MASTER
+git push origin refs/tags/v$NEW_VERSION
 
-echo "Done!"
