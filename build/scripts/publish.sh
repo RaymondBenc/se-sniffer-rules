@@ -28,6 +28,7 @@ RELEASE_BRANCH="release/$NEW_VERSION"
 MASTER="master"
 
 # Create a new release branch
+git fetch origin
 git checkout -b $RELEASE_BRANCH origin/$MASTER
 
 # Update composer.json
@@ -37,6 +38,7 @@ composer config version "$NEW_VERSION"
 # Add new version and merge
 git add --all
 git commit -m "Incrementing version to $NEW_VERSION [$TRAVIS_BUILD_NUMBER]"
+
 git checkout $MASTER
 git merge --no-edit --no-ff $RELEASE_BRANCH
 git tag v$NEW_VERSION -m "Autobuild [$NEW_VERSION][$TRAVIS_BUILD_NUMBER]" $MASTER
