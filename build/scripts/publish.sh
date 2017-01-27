@@ -7,6 +7,7 @@ test "${TRAVIS_BRANCH}" == "master" || { echo "Skipping build, we only work with
 test "${TRAVIS_PHP_VERSION:0:3}" == "5.6" || { echo "Skipping for PHP $TRAVIS_PHP_VERSION -- only update for PHP 5.6 build."; exit 0; }
 test "${TRAVIS_PULL_REQUEST}" == false || { echo "Skipping pull request from building."; exit 0; }
 test "${TRAVIS_COMMIT_MESSAGE:0:12}" != "Incrementing" || { echo "Skipping increment commit"; exit 0; }
+test "${TRAVIS_COMMIT_MESSAGE:0:5}" != "Merge" || { echo "Skipping merge"; exit 0; }
 
 echo "Commit Message: ${TRAVIS_COMMIT_MESSAGE}"
 echo "Commit Message Trimmed: ${TRAVIS_COMMIT_MESSAGE:0:12}"
