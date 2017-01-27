@@ -18,11 +18,9 @@ mkdir release
 cd release/
 
 # Clone it
-git clone --quiet https://${GITHUB_USER_NAME}:${GITHUB_TOKEN}@github.com/RaymondBenc/socialengine-console.git .
+git clone --quiet https://${GITHUB_USER_NAME}:${GITHUB_TOKEN}@github.com/RaymondBenc/socialengine-console.git . > /dev/null
 git config --global user.email $GITHUB_USER_EMAIL
 git config --global user.name $GITHUB_USER_NAME
-git branch
-ls -ala
 
 # Create a new version
 CURRENT_VERSION=$(composer config version)
@@ -48,7 +46,7 @@ git merge --no-edit --no-ff "${RELEASE_BRANCH}"
 git tag "v${NEW_VERSION}" -m "Autobuild [$NEW_VERSION][$TRAVIS_BUILD_NUMBER]" $MASTER
 
 # Push to github
-git push origin $MASTER
-git push origin "${RELEASE_BRANCH}"
-git push origin "refs/tags/v${NEW_VERSION}"
+git push --quiet origin $MASTER
+git push --quiet origin "${RELEASE_BRANCH}"
+git push --quiet origin "refs/tags/v${NEW_VERSION}"
 
