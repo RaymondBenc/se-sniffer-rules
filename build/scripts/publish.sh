@@ -24,14 +24,11 @@ IFS=. components=(${CURRENT_VERSION##*-})
 MAJOR_VERSION=$((components[0]))
 MINOR_VERSION=$((components[1]+1))
 NEW_VERSION="$MAJOR_VERSION.$MINOR_VERSION"
-RELEASE_BRANCH="release/$NEW_VERSION"
+RELEASE_BRANCH="release/v$NEW_VERSION"
 MASTER="master"
 
 # Create a new release branch
-git remote show origin
-git remote update
-git fetch
-git checkout -b $RELEASE_BRANCH origin/$MASTER
+git checkout -b $RELEASE_BRANCH
 
 # Update composer.json
 echo "Incrementing version to: $NEW_VERSION"
