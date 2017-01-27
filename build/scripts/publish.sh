@@ -28,8 +28,7 @@ RELEASE_BRANCH="release/$NEW_VERSION"
 MASTER="master"
 
 # Create a new release branch
-git fetch origin
-git checkout -b $RELEASE_BRANCH origin/$MASTER
+git checkout -b $RELEASE_BRANCH $MASTER
 
 # Update composer.json
 echo "Incrementing version to: $NEW_VERSION"
