@@ -7,11 +7,18 @@ test "${TRAVIS_BRANCH}" == "master" || { echo "Skipping build, we only work with
 test "${TRAVIS_PHP_VERSION:0:3}" == "5.6" || { echo "Skipping for PHP $TRAVIS_PHP_VERSION -- only update for PHP 5.6 build."; exit 0; }
 test "${TRAVIS_PULL_REQUEST}" == false || { echo "Skipping pull request from building."; exit 0; }
 
+# Work env
+rm -rf release
+mkdir release
+cd release/
+
 # Clone it
+git clone https://$GITHUB_USER_NAME:$GITHUB_TOKEN@github.com/SocialEngine/phpfox-importer.git .
 git config --global user.email $GITHUB_USER_EMAIL
 git config --global user.name $GITHUB_USER_NAME
 git remote set-url origin https://$GITHUB_USER_NAME:$GITHUB_TOKEN@github.com/SocialEngine/phpfox-importer.git
-git pull
+git branch
+ls -ala
 
 # Create a new version
 CURRENT_VERSION=$(composer config version)
@@ -31,5 +38,7 @@ git commit -m "Incrementing version to $NEW_VERSION [$TRAVIS_BUILD_NUMBER]"
 git tag v$NEW_VERSION -m "Autobuild [$NEW_VERSION][$TRAVIS_BUILD_NUMBER]" $MASTER
 
 # Push to github
-git push origin $MASTER
-git push origin refs/tags/v$NEW_VERSION
+git push -u origin $MASTER
+git push -u origin refs/tags/v$NEW_VERSION
+
+echo "Done!"
