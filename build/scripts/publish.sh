@@ -44,11 +44,11 @@ composer config version "$NEW_VERSION"
 git add --all
 git commit -m "Incrementing version to $NEW_VERSION [$TRAVIS_BUILD_NUMBER]"
 git checkout $MASTER
-git merge --no-edit --no-ff $RELEASE_BRANCH
-git tag v$NEW_VERSION -m "Autobuild [$NEW_VERSION][$TRAVIS_BUILD_NUMBER]" $MASTER
+git merge --no-edit --no-ff "${RELEASE_BRANCH}"
+git tag "v${NEW_VERSION}" -m "Autobuild [$NEW_VERSION][$TRAVIS_BUILD_NUMBER]" $MASTER
 
 # Push to github
 git push origin $MASTER
-git push origin $RELEASE_BRANCH
-git push origin refs/tags/v$NEW_VERSION
+git push origin "${RELEASE_BRANCH}"
+git push origin "refs/tags/v${NEW_VERSION}"
 
