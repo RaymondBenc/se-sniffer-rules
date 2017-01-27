@@ -13,38 +13,47 @@ use Symfony\Component\Console\Application;
 class Console
 {
     public static $version;
+    
+    private $app;
 
     public function __construct()
     {
-        try {
-            if (!defined('SE_CONSOLE_DIR')) {
-                throw new \Exception('Constant "SE_CONSOLE_DIR" must be defined.');
-            }
-
-            $composer = json_decode(file_get_contents(__DIR__ . '/../composer.json'));
-            self::$version = $composer->version;
-
-            $this->register();
-
-            $app = new Application('Social Engine Console', self::$version);
-            $dir = __DIR__ . '/Commands/';
-            foreach (scandir($dir) as $command) {
-                if ($command == '.' || $command == '..') {
-                    continue;
-                }
-
-                if (substr($command, -4) == '.php') {
-                    $command = 'SocialEngine\\Console\\Commands\\' . str_replace('.php', '', $command);
-                    $ref = new \ReflectionClass($command);
-                    $object = $ref->newInstanceArgs([$command, $ref]);
-                    $app->add($object->__attach);
-                }
-            }
-            $app->run();
-        } catch (\Exception $e) {
-            fwrite(STDOUT, $e->getMessage() . PHP_EOL);
-            exit(1);
+        if (!defined('SE_CONSOLE_DIR')) {
+            throw new \Exception('Constant "SE_CONSOLE_DIR" must be defined.');
         }
+
+        $composer = json_decode(file_get_contents(__DIR__ . '/../composer.json'));
+        self::$version = $composer->version;
+
+        $this->register();
+
+        $this->app = new Application('Social Engine Console', self::$version);
+        $dir = __DIR__ . '/Commands/';
+        foreach (scandir($dir) as $command) {
+            if ($command == '.' || $command == '..') {
+                continue;
+            }
+
+            if (substr($command, -4) == '.php') {
+                $command = 'SocialEngine\\Console\\Commands\\' . str_replace('.php', '', $command);
+                $ref = new \ReflectionClass($command);
+                $object = $ref->newInstanceArgs([$command, $ref]);
+                $this->app->add($object->__attach);
+            }
+        }
+    }
+
+    public function run()
+    {
+        $this->app->run();
+    }
+
+    /**
+     * @return \Symfony\Component\Console\Command\Command[]
+     */
+    public function getCommands()
+    {
+        return $this->app->all();
     }
 
     /**

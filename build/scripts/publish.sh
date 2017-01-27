@@ -9,8 +9,8 @@ test "${TRAVIS_PULL_REQUEST}" == false || { echo "Skipping pull request from bui
 test "${TRAVIS_COMMIT_MESSAGE:0:12}" != "Incrementing" || { echo "Skipping increment commit"; exit 0; }
 test "${TRAVIS_COMMIT_MESSAGE:0:5}" != "Merge" || { echo "Skipping merge"; exit 0; }
 
-echo "Commit Message: ${TRAVIS_COMMIT_MESSAGE}"
-echo "Commit Message Trimmed: ${TRAVIS_COMMIT_MESSAGE:0:12}"
+# Updating docs
+php bin/socialengine --docgenerator
 
 # Work env
 rm -rf release
@@ -37,6 +37,8 @@ git checkout -b "${RELEASE_BRANCH}"
 # Update composer.json
 echo "Incrementing version to: $NEW_VERSION"
 composer config version "$NEW_VERSION"
+rm -f docs/Commands.md
+mv ../docs/Commands.md docs/Commands.md
 
 # Add new version and merge
 git add --all
