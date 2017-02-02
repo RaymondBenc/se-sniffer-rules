@@ -24,20 +24,21 @@ class Build extends Command
             unlink($file->getRealPath());
         }
 
-        file_put_contents(SE_CONSOLE_DIR . 'application/packages/index.html', '');
+        file_put_contents($this->config->get('path') . 'application/packages/index.html', '');
 
         $write = function ($manifestPath) use ($packages) {
             $package = $packages->buildPackageFile($manifestPath);
             if ($package) {
-                $packageFileName = SE_CONSOLE_DIR . 'application/packages/' . $package->getKey() . '.json';
+                $packageFileName = $this->config->get('path') . 'application/packages/' . $package->getKey() . '.json';
                 file_put_contents($packageFileName, json_encode($package->toArray(), JSON_PRETTY_PRINT));
-                $this->write(' -> ' . str_replace(SE_CONSOLE_DIR, '', $packageFileName));
+                $this->write(' -> ' . str_replace($this->config->get('path'), '', $packageFileName));
             }
         };
 
         foreach ($packages->getStructure() as $type => $info) {
             if (in_array($type, $packages->getActions())) {
-                $path = SE_CONSOLE_DIR . str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, trim($info['path'], '/\\'));
+                $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, trim($info['path'], '/\\'));
+                $path = $this->config->get('path') . $path;
 
                 if (!$info['array']) {
                     $manifest = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, trim($info['manifest']));

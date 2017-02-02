@@ -15,6 +15,11 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 abstract class Command
 {
     /**
+     * @var Helper\Config
+     */
+    protected $config;
+
+    /**
      * @var SymfonyCommand
      */
     private $symfony;
@@ -35,10 +40,12 @@ abstract class Command
      *
      * @param string $name Class name
      * @param \ReflectionClass $reflection
+     * @param array $config Array of configuration values
      */
-    public function __construct($name, \ReflectionClass $reflection)
+    public function __construct($name, \ReflectionClass $reflection, $config = [])
     {
         $this->symfony = new SymfonyCommand($name, $reflection, $this);
+        $this->config = new Helper\Config($this, $config);
     }
 
     /**
@@ -77,6 +84,8 @@ abstract class Command
         if ($helper instanceof QuestionHelper) {
             return $helper->ask($this->symfony->input, $this->symfony->output, new Question($question));
         }
+
+        return null;
     }
 
     /**
@@ -119,7 +128,7 @@ abstract class Command
         }
 
         if ($program == 'phpcs') {
-            return SE_CONSOLE_DIR . 'application/vendor/bin/phpcs';
+            return $this->config->get('path') . 'application/vendor/bin/phpcs';
         }
 
         return $this->bin[$program];
@@ -130,14 +139,24 @@ abstract class Command
      *
      * @return string
      */
-    public function tempDir()
+    public function getTempDir()
     {
-        $tmp = dirname(dirname(__FILE__)) . '/tmp/';
+        $tmp = $this->getBaseDir() . 'tmp/';
         if (!is_dir($tmp)) {
             mkdir($tmp);
         }
 
         return $tmp;
+    }
+
+    /**
+     * Return the base working directory.
+     *
+     * @return string
+     */
+    public function getBaseDir()
+    {
+        return dirname(dirname(__FILE__)) . '/';
     }
 
     /**

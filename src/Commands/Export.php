@@ -17,7 +17,7 @@ class Export extends Command
     public function module()
     {
         $package = $this->getArgument('name');
-        $path = SE_CONSOLE_DIR . 'application/modules/' . $package . '/';
+        $path = $this->config->get('path') . 'application/modules/' . $package . '/';
 
         if (!is_dir($path)) {
             throw new \Exception('Directory not found: ' . $path);
@@ -25,18 +25,18 @@ class Export extends Command
 
         $manifest = require($path . 'manifest.php');
         $manifest['package']['files'] = [];
-        $temp = $this->tempDir() . 'export-module-' . $package . '/';
+        $temp = $this->getTempDir() . 'export-module-' . $package . '/';
         if (!is_dir($temp)) {
             mkdir($temp);
         }
 
         $skip = [];
-        $distFile = SE_CONSOLE_DIR . '.dist-ignore';
+        $distFile = $this->config->get('path') . '.dist-ignore';
         if (file_exists($distFile)) {
             $skip = array_map('trim', explode("\n", trim(file_get_contents($distFile))));
         }
 
-        $exec = 'cd ' . SE_CONSOLE_DIR . ' && ';
+        $exec = 'cd ' . $this->config->get('path') . ' && ';
         $exec .= $this->getBin('git') . ' ls-tree --full-tree --name-only -r HEAD';
         $files = $this->exec($exec);
         foreach (explode("\n", $files) as $file) {
@@ -49,12 +49,12 @@ class Export extends Command
 
             mkdir($info->getPath(), 0777, true);
 
-            copy(SE_CONSOLE_DIR . $file, $temp . $file);
+            copy($this->config->get('path') . $file, $temp . $file);
         }
 
         $enginePackage = new \Engine_Package_Manifest_Entity_Package($manifest['package'], [
             'path' => 'application/modules/' . $package . '/',
-            'basePath' => SE_CONSOLE_DIR
+            'basePath' => $this->config->get('path')
         ]);
 
         file_put_contents($temp . 'package.json', json_encode($enginePackage->toArray(), JSON_PRETTY_PRINT));
@@ -68,6 +68,6 @@ class Export extends Command
         $this->exec('cd ' . $temp . ' &&  tar -zcf ../' . $tarName . ' .');
         $this->exec('rm -rf ' . $temp);
         $this->write('Done!');
-        $this->write('Exported to: ' . $this->tempDir() . $tarName);
+        $this->write('Exported to: ' . $this->getTempDir() . $tarName);
     }
 }

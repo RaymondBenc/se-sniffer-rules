@@ -13,7 +13,7 @@ class Clean extends Command
      */
     public function process()
     {
-        $base = SE_CONSOLE_DIR;
+        $base = $this->config->get('path');
 
         if (!file_exists($base . 'application/libraries/Engine/Api.php')) {
             throw new \Exception('Does not seem like SE resides here.');

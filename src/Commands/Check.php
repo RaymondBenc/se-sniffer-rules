@@ -15,7 +15,8 @@ class Check extends Command
      */
     public function process()
     {
-        $standards = SE_CONSOLE_DIR . '/application/vendor/raymondbenc/socialengine-coding-standards/SocialEngine/';
+        $dir = '/application/vendor/raymondbenc/socialengine-coding-standards/SocialEngine/';
+        $standards = $this->config->get('path') . $dir;
         $bin = $this->getBin('php') . ' ' . $this->getBin('phpcs') . ' --standard="' . $standards . '" ';
 
         $files = explode("\n", $this->git('ls-tree --full-tree --name-only -r HEAD'));
@@ -26,7 +27,7 @@ class Check extends Command
             }
 
             if (substr($file, -4) == '.php') {
-                $this->write($this->exec($bin . ' ' . SE_CONSOLE_DIR . $file));
+                $this->write($this->exec($bin . ' ' . $this->config->get('path') . $file));
             }
         }
     }

@@ -12,22 +12,40 @@ use Symfony\Component\Console\Application;
  */
 class Console
 {
-    public static $version;
-    
+    /**
+     * Current console version
+     *
+     * @var string
+     */
+    private $version;
+
+    /**
+     * @var Application
+     */
     private $app;
 
-    public function __construct()
-    {
-        if (!defined('SE_CONSOLE_DIR')) {
-            throw new \Exception('Constant "SE_CONSOLE_DIR" must be defined.');
-        }
+    /**
+     * Configuration values
+     *
+     * @var array
+     */
+    private $config;
 
+    public function __construct($config = [])
+    {
         $composer = json_decode(file_get_contents(__DIR__ . '/../composer.json'));
-        self::$version = $composer->version;
+
+        $this->version = $composer->version;
+        $this->config = $config;
+
+        if (!isset($this->config['path'])) {
+            $path = dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))) . '/';
+            $this->config['path'] = $path;
+        }
 
         $this->register();
 
-        $this->app = new Application('Social Engine Console', self::$version);
+        $this->app = new Application('Social Engine Console', $this->version);
         $dir = __DIR__ . '/Commands/';
         foreach (scandir($dir) as $command) {
             if ($command == '.' || $command == '..') {
@@ -37,12 +55,17 @@ class Console
             if (substr($command, -4) == '.php') {
                 $command = 'SocialEngine\\Console\\Commands\\' . str_replace('.php', '', $command);
                 $ref = new \ReflectionClass($command);
-                $object = $ref->newInstanceArgs([$command, $ref]);
+                $object = $ref->newInstanceArgs([$command, $ref, $this->config]);
                 $this->app->add($object->__attach);
             }
         }
     }
 
+    /**
+     * Run Symfony command
+     *
+     * @see \Symfony\Component\Console\Application::all()
+     */
     public function run()
     {
         $this->app->run();
@@ -64,7 +87,7 @@ class Console
         spl_autoload_register(function ($class) {
             $class = str_replace('_', '/', $class);
             if (substr($class, 0, 6) == 'Engine' || substr($class, 0, 4) == 'Zend') {
-                $path = SE_CONSOLE_DIR . 'application/libraries/' . $class . '.php';
+                $path = $this->config['path'] . 'application/libraries/' . $class . '.php';
 
                 require($path);
             }

@@ -92,7 +92,7 @@ class Packages
 
     public function __construct(Command $command)
     {
-        defined('APPLICATION_PATH') || define('APPLICATION_PATH', SE_CONSOLE_DIR);
+        defined('APPLICATION_PATH') || define('APPLICATION_PATH', $this->config->get('path'));
         defined('DS') || define('DS', DIRECTORY_SEPARATOR);
         defined('PS') || define('PS', PATH_SEPARATOR);
         defined('_ENGINE') || define('_ENGINE', true);
@@ -137,8 +137,8 @@ class Packages
     public function getJsonFiles()
     {
         $files = [];
-        foreach (scandir(SE_CONSOLE_DIR . 'application/packages') as $child) {
-            $childFile = SE_CONSOLE_DIR . 'application/packages/' . $child;
+        foreach (scandir($this->config->get('path') . 'application/packages') as $child) {
+            $childFile = $this->config->get('path') . 'application/packages/' . $child;
             if (is_file($childFile) && substr($childFile, -5) == '.json') {
                 $files[] = new \SplFileInfo($childFile);
             }
