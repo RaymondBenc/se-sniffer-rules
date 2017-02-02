@@ -3,6 +3,7 @@
 namespace SocialEngine\Console\Helper;
 
 use SocialEngine\Console\Command;
+use SocialEngine\Console\Exception;
 
 /**
  * SE Packages Helper Class
@@ -90,6 +91,11 @@ class Packages
      */
     private $command;
 
+    /**
+     * Packages constructor.
+     * @param Command $command
+     * @throws Exception\Helper
+     */
     public function __construct(Command $command)
     {
         defined('APPLICATION_PATH') || define('APPLICATION_PATH', $this->config->get('path'));
@@ -99,7 +105,7 @@ class Packages
 
         $configFile = APPLICATION_PATH . 'application/settings/database.php';
         if (!file_exists($configFile)) {
-            throw new \Exception('This command requires SE to be installed.');
+            throw new Exception\Helper('This command requires SE to be installed.');
         }
 
         $this->command = $command;
@@ -190,7 +196,7 @@ class Packages
      *
      * @return \Engine_Package_Manifest
      *
-     * @throws \Exception
+     * @throws Exception\Helper
      */
     public function buildPackageFile($manifestPath)
     {
@@ -198,7 +204,7 @@ class Packages
 
         $manifestData = require $manifestPath;
         if (empty($manifestData['package'])) {
-            throw new \Exception(sprintf('Missing package data for package in path: %s', $manifestPath));
+            throw new Exception\Helper(sprintf('Missing package data for package in path: %s', $manifestPath));
         }
         $manifestData = $manifestData['package'];
         $manifestData['date'] = $date;

@@ -3,6 +3,7 @@
 namespace SocialEngine\Console\Helper;
 
 use SocialEngine\Console\Command;
+use SocialEngine\Console\Exception;
 
 /**
  * Class Config Helper
@@ -53,7 +54,7 @@ class Config extends BaseCommand
      *
      * @param string $name Key
      * @param string $value Value
-     * @throws \Exception If we cannot write to config file.
+     * @throws Exception\Helper If we cannot write to config file.
      * @return bool
      */
     public function set($name, $value)
@@ -63,7 +64,7 @@ class Config extends BaseCommand
         @file_put_contents($this->file, json_encode($this->config, JSON_PRETTY_PRINT));
 
         if (!file_exists($this->file)) {
-            throw new \Exception('Unable to write to config file: ' . $this->file);
+            throw new Exception\Helper('Unable to write to config file: ' . $this->file);
         }
 
         return true;

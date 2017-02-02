@@ -3,6 +3,7 @@
 namespace SocialEngine\Console\Commands;
 
 use SocialEngine\Console\Command;
+use SocialEngine\Console\Exception;
 
 /**
  * SE Builder
@@ -10,6 +11,8 @@ use SocialEngine\Console\Command;
 class Export extends Command
 {
     /**
+     * @throws Exception\Command
+     *
      * @cli-command export:module
      * @cli-argument name
      * @cli-info Export a module
@@ -20,7 +23,7 @@ class Export extends Command
         $path = $this->config->get('path') . 'application/modules/' . $package . '/';
 
         if (!is_dir($path)) {
-            throw new \Exception('Directory not found: ' . $path);
+            throw new Exception\Command('Directory not found: ' . $path);
         }
 
         $manifest = require($path . 'manifest.php');

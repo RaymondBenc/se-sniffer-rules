@@ -3,11 +3,12 @@
 namespace SocialEngine\Console\Commands;
 
 use SocialEngine\Console\Command;
+use SocialEngine\Console\Exception;
 
 class Clean extends Command
 {
     /**
-     * @throws \Exception
+     * @throws Exception\Command
      * @cli-command clean
      * @cli-info Reset your Social Engine script to a clean state.
      */
@@ -16,7 +17,7 @@ class Clean extends Command
         $base = $this->config->get('path');
 
         if (!file_exists($base . 'application/libraries/Engine/Api.php')) {
-            throw new \Exception('Does not seem like SE resides here.');
+            throw new Exception\Command('Does not seem like SE resides here.');
         }
 
         $remove = [
