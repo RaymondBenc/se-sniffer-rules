@@ -74,7 +74,7 @@ class SymfonyCommand extends BaseCommand
     {
         $methods = $this->reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
-            if ($method->class == $this->name) {
+            if ($method->class == $this->name && $method->getName() != '__construct') {
                 $docComments = $method->getDocComment();
 
                 if (empty($docComments)) {
@@ -139,7 +139,13 @@ class SymfonyCommand extends BaseCommand
         }
 
         $method = $this->map[$this->name][$this->getName()];
+        $arguments = $input->getArguments();
+        if (isset($arguments['command'])) {
+            unset($arguments['command']);
+        }
 
-        return $this->command->$method();
+        $response = call_user_func_array([$this->command, $method], $arguments);
+
+        return $response;
     }
 }
