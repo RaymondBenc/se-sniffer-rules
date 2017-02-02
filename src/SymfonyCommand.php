@@ -92,6 +92,9 @@ class SymfonyCommand extends BaseCommand
                         $data = implode(' ', $parts);
 
                         switch ($name) {
+                            case 'argument':
+                                $this->addArgument($data);
+                                break;
                             case 'command':
                                 $this->setName($data);
                                 if (!isset($this->map[$this->name])) {

@@ -42,14 +42,27 @@ abstract class Command
     }
 
     /**
-     * Will return the value of an argument that was set via $this->arguments.
+     * Return the value of an option.
      *
-     * @param string $key Name of the argument.
+     * @see Symfony\Component\Console\Input\Input::getOption()
+     * @param string $key Name of the option.
      * @return mixed
      */
-    protected function get($key)
+    protected function getOption($key)
     {
         return $this->symfony->input->getOption($key);
+    }
+
+    /**
+     * Return the value of an argument.
+     *
+     * @see Symfony\Component\Console\Input\Input::getArgument()
+     * @param string $name Argument name
+     * @return string
+     */
+    protected function getArgument($name)
+    {
+        return $this->symfony->input->getArgument($name);
     }
 
     /**
@@ -74,7 +87,7 @@ abstract class Command
      */
     protected function exec($command)
     {
-        if ($this->get('v')) {
+        if ($this->getOption('v')) {
             $this->write($command);
         }
         return shell_exec($command);
@@ -113,12 +126,30 @@ abstract class Command
     }
 
     /**
+     * Return a working temporary directory.
+     *
+     * @return string
+     */
+    public function tempDir()
+    {
+        $tmp = dirname(dirname(__FILE__)) . '/tmp/';
+        if (!is_dir($tmp)) {
+            mkdir($tmp);
+        }
+
+        return $tmp;
+    }
+
+    /**
      * Write to CLI
      *
-     * @param string $string
+     * @param mixed $string
      */
     public function write($string)
     {
+        if (!is_string($string)) {
+            $string = print_r($string, true);
+        }
         $this->symfony->output->writeln($string);
     }
 
