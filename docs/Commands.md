@@ -25,6 +25,11 @@ Run a code check via PHP CodeSniffer
 Reset your Social Engine script to a clean state.
 
 
+**config:get**
+
+Get a configuration value
+
+
 **export:module**
 
 Export a module
