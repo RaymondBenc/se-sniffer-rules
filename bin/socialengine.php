@@ -39,7 +39,7 @@ if (!file_exists($autoload)) {
 require($autoload);
 
 try {
-    $console = new SocialEngine\Console\Console();
+    $console = new SocialEngine\Console\Console($config);
     if (isset($options['docgenerator'])) {
         new SocialEngine\Console\Helper\DocGenerator($console);
     }
