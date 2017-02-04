@@ -36,6 +36,8 @@ class Console
      */
     private $symfony;
 
+    private $commands = [];
+
     public function __construct($config = [])
     {
         $composer = json_decode(file_get_contents(__DIR__ . '/../composer.json'));
@@ -74,11 +76,13 @@ class Console
     }
 
     /**
-     * @return \Symfony\Component\Console\Command\Command[]
+     * Array of all commands
+     *
+     * @return array
      */
     public function getCommands()
     {
-        return $this->app->all();
+        return $this->commands;
     }
 
     /**
@@ -135,12 +139,14 @@ class Console
                                 $this->symfony->addArgument($data);
                                 break;
                             case 'command':
+                                $key = $data . '->' . $method->getName();
                                 $this->symfony = new SymfonyCommand($data, $method->getName());
                                 $this->symfony->setName($data);
-                                $this->symfony->setCommand($reflection->newInstanceArgs([
+                                $this->commands[$key] = $reflection->newInstanceArgs([
                                     $this->symfony,
                                     $this->config
-                                ]));
+                                ]);
+                                $this->symfony->setCommand($this->commands[$key]);
                                 break;
                             case 'info':
                                 $this->symfony->setDescription($data);
