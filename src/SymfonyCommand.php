@@ -44,27 +44,24 @@ class SymfonyCommand extends BaseCommand
      */
     private $name;
 
-    /**
-     * Map that connects the command to the correct class method.
-     *
-     * @var array
-     */
-    private $map = [];
+    private $method;
 
     /**
      * SymfonyCommand constructor.
-     *
-     * @param string $name
-     * @param \ReflectionClass $reflection
-     * @param Command $command
+     * @param null|string $name
+     * @param $method
      */
-    public function __construct($name, \ReflectionClass $reflection, Command $command)
+    public function __construct($name, $method)
     {
-        $this->reflection = $reflection;
-        $this->command = $command;
         $this->name = $name;
+        $this->method = $method;
 
-        parent::__construct();
+        parent::__construct($name);
+    }
+
+    public function setCommand($command)
+    {
+        $this->command = $command;
     }
 
     /**
@@ -72,49 +69,6 @@ class SymfonyCommand extends BaseCommand
      */
     protected function configure()
     {
-        $methods = $this->reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-        foreach ($methods as $method) {
-            if ($method->class == $this->name && $method->getName() != '__construct') {
-                $docComments = $method->getDocComment();
-
-                if (empty($docComments)) {
-                    throw new \Exception('Missing doc comments for this method: ' .
-                        $method->class . '::' . $method->getName());
-                }
-
-                $comments = explode("\n", $docComments);
-                foreach ($comments as $comment) {
-                    $comment = trim(str_replace('*', '', $comment));
-                    if (substr($comment, 0, 5) == '@cli-') {
-                        $parts = explode(' ', trim(explode('@cli-', $comment)[1]));
-                        $name = trim($parts[0]);
-                        unset($parts[0]);
-                        $data = implode(' ', $parts);
-
-                        switch ($name) {
-                            case 'argument':
-                                $this->addArgument($data);
-                                break;
-                            case 'command':
-                                $this->setName($data);
-                                if (!isset($this->map[$this->name])) {
-                                    $this->map[$this->name] = [];
-                                }
-                                $this->map[$this->name][$data] = $method->getName();
-                                break;
-                            case 'info':
-                                $this->setDescription($data);
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!$this->getName()) {
-            throw new \Exception('Missing a name for: ' . $this->name);
-        }
-
         $this->addOption('path', null, InputOption::VALUE_OPTIONAL, 'Path to SE.', null);
         $this->addOption('v', null, InputOption::VALUE_OPTIONAL, 'Enable verbose');
     }
@@ -134,17 +88,21 @@ class SymfonyCommand extends BaseCommand
         $this->output = $output;
         $this->input = $input;
 
-        if (!isset($this->map[$this->name])) {
+        // $this->output->writeln($this->name . ' -> ' . $this->method);
+
+        /*
+        if (!isset($this->command->map[$this->name])) {
             throw new \Exception('Class "' . $this->name . '" is missing from command map.');
         }
 
-        $method = $this->map[$this->name][$this->getName()];
+        $method = $this->command->map[$this->name];
+        */
         $arguments = $input->getArguments();
         if (isset($arguments['command'])) {
             unset($arguments['command']);
         }
 
-        $response = call_user_func_array([$this->command, $method], $arguments);
+        $response = call_user_func_array([$this->command, $this->method], $arguments);
 
         return $response;
     }

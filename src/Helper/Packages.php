@@ -98,12 +98,13 @@ class Packages
      */
     public function __construct(Command $command)
     {
-        defined('APPLICATION_PATH') || define('APPLICATION_PATH', $this->config->get('path'));
+        defined('APPLICATION_PATH') || define('APPLICATION_PATH', $command->getConfig('path'));
         defined('DS') || define('DS', DIRECTORY_SEPARATOR);
         defined('PS') || define('PS', PATH_SEPARATOR);
         defined('_ENGINE') || define('_ENGINE', true);
 
         $configFile = APPLICATION_PATH . 'application/settings/database.php';
+
         if (!file_exists($configFile)) {
             throw new Exception\Helper('This command requires SE to be installed.');
         }
@@ -143,8 +144,8 @@ class Packages
     public function getJsonFiles()
     {
         $files = [];
-        foreach (scandir($this->config->get('path') . 'application/packages') as $child) {
-            $childFile = $this->config->get('path') . 'application/packages/' . $child;
+        foreach (scandir($this->command->getConfig('path') . 'application/packages') as $child) {
+            $childFile = $this->command->getConfig('path') . 'application/packages/' . $child;
             if (is_file($childFile) && substr($childFile, -5) == '.json') {
                 $files[] = new \SplFileInfo($childFile);
             }
