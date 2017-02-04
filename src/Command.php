@@ -17,7 +17,7 @@ abstract class Command
     /**
      * @var Helper\Config
      */
-    protected $config;
+    private $config;
 
     /**
      * @var SymfonyCommand
@@ -36,16 +36,21 @@ abstract class Command
     ];
 
     /**
-     * Command constructor.
+     * Output color.
      *
-     * @param string $name Class name
-     * @param \ReflectionClass $reflection
-     * @param array $config Array of configuration values
+     * @var string
      */
-    public function __construct($name, \ReflectionClass $reflection, $config = [])
+    private $color;
+
+    /**
+     * Command constructor.
+     * @param SymfonyCommand $symfony
+     * @param array $config
+     */
+    public function __construct(SymfonyCommand $symfony, $config = [])
     {
-        $this->symfony = new SymfonyCommand($name, $reflection, $this);
         $this->config = new Helper\Config($this, $config);
+        $this->symfony = $symfony;
     }
 
     /**
@@ -127,11 +132,15 @@ abstract class Command
             throw new \Exception('Unable to find the bin: ' . $program);
         }
 
-        if ($program == 'phpcs') {
-            return $this->config->get('path') . 'application/vendor/bin/phpcs';
-        }
+        return $this->getConfig($program . '-path', $this->bin[$program]);
+    }
 
-        return $this->bin[$program];
+    /**
+     * @inheritdoc
+     */
+    public function getConfig($name, $default = null)
+    {
+        return $this->config->get($name, $default);
     }
 
     /**
@@ -160,6 +169,27 @@ abstract class Command
     }
 
     /**
+     * @inheritdoc
+     */
+    public function setConfig($name, $value)
+    {
+        return $this->config->set($name, $value);
+    }
+
+    /**
+     * Set a string color for the output.
+     *
+     * @param string $color Color
+     * @return $this
+     */
+    public function color($color)
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
      * Write to CLI
      *
      * @param mixed $string
@@ -169,21 +199,36 @@ abstract class Command
         if (!is_string($string)) {
             $string = print_r($string, true);
         }
+
+        if ($this->color) {
+            $string = '<fg=' . $this->color . '>' . $string . '</>';
+        }
+
         $this->symfony->output->writeln($string);
+
+        $this->color = null;
     }
 
     /**
-     * Returning Symfony for late binding.
+     * Output results
      *
-     * @param $name
-     * @return null|SymfonyCommand
+     * @param string|array $result
      */
-    public function __get($name)
+    public function writeResults($result)
     {
-        if ($name != '__attach') {
-            return null;
+        if (!is_array($result)) {
+            $result = [$result];
         }
 
-        return $this->symfony;
+        $hashTag = ' ' . str_repeat('#', strlen($result) + 4);
+        $this->write('');
+        $this->write($hashTag);
+        $this->write(' #');
+        foreach ($result as $value) {
+            $this->write(' # ' . $value);
+        }
+        $this->write(' #');
+        $this->write($hashTag);
+        $this->write('');
     }
 }
