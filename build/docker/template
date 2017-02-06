@@ -1,0 +1,8 @@
+FROM {{ PHP_VERSION }}
+
+ADD . /app/
+
+ENV VOLUME_PATH /app/
+
+RUN php /app/test.php
+

@@ -46,7 +46,12 @@ class Config extends BaseCommand
      */
     public function get($name, $default = null)
     {
-        return isset($this->config[$name]) ? $this->config[$name] : $default;
+        $value = isset($this->config[$name]) ? $this->config[$name] : $default;
+        if ($name == 'path') {
+            $value = rtrim($value, '/') . '/';
+        }
+
+        return $value;
     }
 
     /**

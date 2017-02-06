@@ -9,19 +9,37 @@ class SymfonyCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testCommandCreation()
     {
-        $dir = __DIR__ . '/../src/Commands/';
-        foreach (scandir($dir) as $command) {
-            if ($command == '.' || $command == '..') {
-                continue;
-            }
-
-            if (substr($command, -4) == '.php') {
-                $command = 'SocialEngine\\Console\\Commands\\' . str_replace('.php', '', $command);
-                $ref = new \ReflectionClass($command);
-                $object = $ref->newInstanceArgs([$command, $ref]);
-
-                $this->assertInstanceOf('\SocialEngine\Console\Command', $object);
-            }
+        foreach ($this->getCommands() as $command => $object) {
+            $this->assertInstanceOf('\SocialEngine\Console\Command', $object);
         }
+    }
+
+    /**
+     * Test all commands to make sure methods exist
+     */
+    public function testCommandMethods()
+    {
+        foreach ($this->getCommands() as $command => $object) {
+            list(, $method) = explode('->', $command);
+            $this->assertTrue(method_exists($object, $method));
+        }
+    }
+
+    /**
+     * Array of all commands
+     *
+     * @return array
+     */
+    private function getCommands()
+    {
+        $configFile = __DIR__ . '/../.config.json';
+        $config = [];
+
+        if (file_exists($configFile)) {
+            $config = json_decode(file_get_contents($configFile), true);
+        }
+        $console = new Console($config);
+
+        return $console->getCommands();
     }
 }

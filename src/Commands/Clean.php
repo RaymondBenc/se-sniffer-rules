@@ -14,7 +14,7 @@ class Clean extends Command
      */
     public function process()
     {
-        $base = $this->config->get('path');
+        $base = $this->getConfig('path');
 
         if (!file_exists($base . 'application/libraries/Engine/Api.php')) {
             throw new Exception\Command('Does not seem like SE resides here.');

@@ -20,7 +20,7 @@ class Export extends Command
     public function module()
     {
         $package = $this->getArgument('name');
-        $path = $this->config->get('path') . 'application/modules/' . $package . '/';
+        $path = $this->getConfig('path') . 'application/modules/' . $package . '/';
 
         if (!is_dir($path)) {
             throw new Exception\Command('Directory not found: ' . $path);
@@ -34,12 +34,12 @@ class Export extends Command
         }
 
         $skip = [];
-        $distFile = $this->config->get('path') . '.dist-ignore';
+        $distFile = $this->getConfig('path') . '.dist-ignore';
         if (file_exists($distFile)) {
             $skip = array_map('trim', explode("\n", trim(file_get_contents($distFile))));
         }
 
-        $exec = 'cd ' . $this->config->get('path') . ' && ';
+        $exec = 'cd ' . $this->getConfig('path') . ' && ';
         $exec .= $this->getBin('git') . ' ls-tree --full-tree --name-only -r HEAD';
         $files = $this->exec($exec);
         foreach (explode("\n", $files) as $file) {
@@ -52,12 +52,12 @@ class Export extends Command
 
             mkdir($info->getPath(), 0777, true);
 
-            copy($this->config->get('path') . $file, $temp . $file);
+            copy($this->getConfig('path') . $file, $temp . $file);
         }
 
         $enginePackage = new \Engine_Package_Manifest_Entity_Package($manifest['package'], [
             'path' => 'application/modules/' . $package . '/',
-            'basePath' => $this->config->get('path')
+            'basePath' => $this->getConfig('path')
         ]);
 
         file_put_contents($temp . 'package.json', json_encode($enginePackage->toArray(), JSON_PRETTY_PRINT));
