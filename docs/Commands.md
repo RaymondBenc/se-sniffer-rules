@@ -1,28 +1,23 @@
 # Social Engine Console Commands
 
-**help**
-
-Displays help for a command
-
-
-**list**
-
-Lists commands
-
-
 **build:packages**
 
 Build all SE packages
 
 
-**check**
+**check:standard**
 
-Run a code check via PHP CodeSniffer
+Run a code check via PHP CodeSniffer. Errors report to ./tmp/standard-error.log
 
 
-**clean**
+**check:compatibility**
 
-Reset your Social Engine script to a clean state.
+Check PHP compatibility on PHP 5.2 -> 7.1
+
+
+**config:set**
+
+Set a configuration value
 
 
 **config:get**
@@ -33,5 +28,15 @@ Get a configuration value
 **export:module**
 
 Export a module
+
+
+**install**
+
+Install a clean copy of Social Engine.
+
+
+**reset**
+
+Reset your Social Engine script to a clean state.
 
 
