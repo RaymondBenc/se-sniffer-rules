@@ -117,17 +117,6 @@ class Install extends Command
                 'name' => 'engine4_core_settings',
             ));
 
-            // Generate new secret key
-            $row = $settingsTable->find('core.secret')->current();
-            if (null === $row) {
-                $row = $settingsTable->createRow();
-                $row->name = 'core.secret';
-            }
-            if ($row->value == 'staticSalt' || $row->value == 'NULL' || !$row->value) {
-                $row->value = sha1(time() . php_uname() . dirname(__FILE__) . rand(1000000, 9000000));
-                $row->save();
-            }
-
             // Save key
             $row = $settingsTable->find('core.license.key')->current();
             if (null === $row) {
@@ -163,12 +152,7 @@ class Install extends Command
             ));
 
             // Get static salt
-            $staticSalt = $settingsTable->find('core.secret')->current();
-            if (is_object($staticSalt)) {
-                $staticSalt = $staticSalt->value;
-            } elseif (!is_string($staticSalt)) {
-                $staticSalt = '';
-            }
+            $staticSalt = 'staticSalt';
 
             // Get superadmin level
             $superAdminLevel = $levelTable->fetchRow($levelTable->select()->where('flag = ?', 'superadmin'));

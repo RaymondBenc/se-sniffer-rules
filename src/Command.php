@@ -124,6 +124,14 @@ abstract class Command
      */
     protected function exec($command)
     {
+        if (is_array($command)) {
+            $items = $command;
+            $command = '';
+            foreach ($items as $item) {
+                $command .= $item . ' ';
+            }
+        }
+
         if ($this->getOption('v')) {
             $this->write($command);
         }
@@ -164,6 +172,16 @@ abstract class Command
     public function getConfig($name, $default = null)
     {
         return $this->config->get($name, $default);
+    }
+
+    /**
+     * Get the base SE config.
+     *
+     * @return array
+     */
+    public function getSocialEngineConfig()
+    {
+        return require(APPLICATION_PATH . 'application/settings/database.php');
     }
 
     /**
