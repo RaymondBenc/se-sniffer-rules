@@ -17,12 +17,12 @@ abstract class Command
     /**
      * @var Helper\Config
      */
-    private $config;
+    protected $config;
 
     /**
      * @var SymfonyCommand
      */
-    private $symfony;
+    protected $symfony;
 
     /**
      * Local bin paths
@@ -32,7 +32,8 @@ abstract class Command
     private $bin = [
         'git' => 'git',
         'php' => 'php',
-        'phpcs' => 'phpcs'
+        'phpcs' => 'phpcs',
+        'mysql' => 'mysql'
     ];
 
     /**
@@ -47,9 +48,9 @@ abstract class Command
      * @param SymfonyCommand $symfony
      * @param array $config
      */
-    public function __construct(SymfonyCommand $symfony, $config = [])
+    public function __construct(SymfonyCommand $symfony, $config = null)
     {
-        $this->config = new Helper\Config($this, $config);
+        $this->config = ($config instanceof Helper\Config ? $config : new Helper\Config($this, $config));
         $this->symfony = $symfony;
     }
 
@@ -87,7 +88,7 @@ abstract class Command
     {
         $helper = $this->symfony->getHelper('question');
         if ($helper instanceof QuestionHelper) {
-            return $helper->ask($this->symfony->input, $this->symfony->output, new Question($question));
+            return trim($helper->ask($this->symfony->input, $this->symfony->output, new Question(' ' . $question)));
         }
 
         return null;
@@ -207,6 +208,13 @@ abstract class Command
         $this->symfony->output->writeln($string);
 
         $this->color = null;
+    }
+
+    public function step($name, \Closure $callback)
+    {
+        $this->symfony->output->write($name . '...');
+        $callback();
+        $this->symfony->output->write(' <fg=green>Success</>', true);
     }
 
     /**

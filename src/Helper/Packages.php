@@ -82,7 +82,7 @@ class Packages
     private $config;
 
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Db
      */
     private $db;
 
@@ -98,20 +98,8 @@ class Packages
      */
     public function __construct(Command $command)
     {
-        defined('APPLICATION_PATH') || define('APPLICATION_PATH', $command->getConfig('path'));
-        defined('DS') || define('DS', DIRECTORY_SEPARATOR);
-        defined('PS') || define('PS', PATH_SEPARATOR);
-        defined('_ENGINE') || define('_ENGINE', true);
-
-        $configFile = APPLICATION_PATH . 'application/settings/database.php';
-
-        if (!file_exists($configFile)) {
-            throw new Exception\Helper('This command requires SE to be installed.');
-        }
-
         $this->command = $command;
-        $this->config = require($configFile);
-        $this->db = \Zend_Db::factory($this->config['adapter'], $this->config['params']);
+        $this->db = new Db($command);
     }
 
     /**
@@ -171,11 +159,12 @@ class Packages
     {
         $packageManager = new \Engine_Package_Manager([
             'basePath' => APPLICATION_PATH,
-            'db' => $this->db
+            'db' => $this->db->factory
         ]);
 
         $operations = array();
         foreach ($packageManager->listInstalledPackages() as $package) {
+            $this->command->write(' -> ' . $package->getName());
             $operations[] = new \Engine_Package_Manager_Operation_Install($packageManager, $package);
         }
 

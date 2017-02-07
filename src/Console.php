@@ -90,9 +90,17 @@ class Console
      */
     private function register()
     {
+        defined('APPLICATION_PATH') || define('APPLICATION_PATH', $this->config['path']);
+        defined('DS') || define('DS', DIRECTORY_SEPARATOR);
+        defined('PS') || define('PS', PATH_SEPARATOR);
+        defined('_ENGINE') || define('_ENGINE', true);
+
         spl_autoload_register(function ($class) {
             $class = str_replace('_', '/', $class);
-            if (substr($class, 0, 6) == 'Engine' || substr($class, 0, 4) == 'Zend') {
+            if (substr($class, 0, 6) == 'Engine' ||
+                substr($class, 0, 4) == 'Zend' ||
+                substr($class, 0, 4) == 'Core'
+            ) {
                 $this->config['path'] = rtrim($this->config['path'], '/') . '/';
                 $path = $this->config['path'] . 'application/libraries/' . $class . '.php';
 
