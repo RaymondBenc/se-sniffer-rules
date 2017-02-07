@@ -1,5 +1,8 @@
 <?php
 
+set_time_limit(0);
+ini_set('memory_limit', -1);
+
 $autoload = __DIR__ . '/../vendor/autoload.php';
 $options = getopt(null, ['path:', 'docgenerator']);
 $path = dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))) . '/';
