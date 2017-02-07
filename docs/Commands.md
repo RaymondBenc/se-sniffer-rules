@@ -35,6 +35,11 @@ Export a module
 Install a clean copy of Social Engine.
 
 
+**purge:databases**
+
+Purges all auto-created databases.
+
+
 **reset**
 
 Reset your Social Engine script to a clean state.
