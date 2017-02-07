@@ -102,7 +102,6 @@ class Install extends Command
                         $db->factory->query($query);
                     }
                 }
-
             } catch (\Exception $e) {
                 $this->color('red')->write($e->getMessage());
             }
@@ -220,7 +219,6 @@ class Install extends Command
                 $theme->save();
 
                 $db->commit();
-
             } catch (\Exception $e) {
                 $db->rollBack();
                 exit($e->getMessage());
