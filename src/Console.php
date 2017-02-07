@@ -36,8 +36,15 @@ class Console
      */
     private $symfony;
 
+    /**
+     * @var Command[]
+     */
     private $commands = [];
 
+    /**
+     * Console constructor.
+     * @param array $config
+     */
     public function __construct($config = [])
     {
         $composer = json_decode(file_get_contents(__DIR__ . '/../composer.json'));
@@ -78,7 +85,7 @@ class Console
     /**
      * Array of all commands
      *
-     * @return array
+     * @return Command[]
      */
     public function getCommands()
     {

@@ -12,7 +12,7 @@ class DocGenerator
     {
         $this->out('# Social Engine Console Commands');
         $this->out('');
-        foreach ($console->getCommands() as $command) {
+        foreach ($console->getCommands() as $name => $command) {
             $this->out('**' . $command->getName() . '**');
             $this->out('');
             $this->out($command->getDescription());

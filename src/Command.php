@@ -55,6 +55,28 @@ abstract class Command
     }
 
     /**
+     * Get the commands name.
+     *
+     * @see \Symfony\Component\Console\Command\Command::getName
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->symfony->getName();
+    }
+
+    /**
+     * Get the commands description.
+     *
+     * @see \Symfony\Component\Console\Command\Command::getDescription
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->symfony->getDescription();
+    }
+
+    /**
      * Return the value of an option.
      *
      * @see Symfony\Component\Console\Input\Input::getOption()
