@@ -192,7 +192,11 @@ class Packages
     {
         $date = time();
 
-        $manifestData = require $manifestPath;
+        if (!file_exists($manifestPath)) {
+            throw new Exception\Helper('File does not exist: ' . $manifestPath);
+        }
+
+        $manifestData = require($manifestPath);
         if (empty($manifestData['package'])) {
             throw new Exception\Helper(sprintf('Missing package data for package in path: %s', $manifestPath));
         }

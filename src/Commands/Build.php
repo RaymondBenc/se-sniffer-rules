@@ -31,12 +31,16 @@ class Build extends Command
 
         $this->step('Building package JSON', function () use ($packages) {
             $write = function ($manifestPath) use ($packages) {
-                $package = $packages->buildPackageFile($manifestPath);
-                if ($package) {
-                    $packageFileName = $this->getConfig('path');
-                    $packageFileName .= 'application/packages/' . $package->getKey() . '.json';
-                    file_put_contents($packageFileName, json_encode($package->toArray(), JSON_PRETTY_PRINT));
-                    $this->write(' -> ' . str_replace($this->getConfig('path'), '', $packageFileName));
+                try {
+                    $package = $packages->buildPackageFile($manifestPath);
+                    if ($package) {
+                        $packageFileName = $this->getConfig('path');
+                        $packageFileName .= 'application/packages/' . $package->getKey() . '.json';
+                        file_put_contents($packageFileName, json_encode($package->toArray(), JSON_PRETTY_PRINT));
+                        $this->write(' -> ' . str_replace($this->getConfig('path'), '', $packageFileName));
+                    }
+                } catch (\Exception $e) {
+                    $this->color('yellow')->write($e->getMessage());
                 }
             };
 

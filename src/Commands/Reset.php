@@ -22,7 +22,8 @@ class Reset extends Command
 
         $this->step('Resetting SE', function () use ($base) {
             $remove = [
-                'application/settings/database.php'
+                'application/settings/database.php',
+                'temporary/log/import-phpfox.log'
             ];
 
             foreach ($remove as $file) {
