@@ -6,7 +6,7 @@
 You can install this console in your Social Engine root directory or outside it. 
 
 ```
-composer require raymondbenc/socialengine-console
+composer require redmatterio/socialengine-console
 ```
 
 ## Usage
