@@ -18,7 +18,7 @@ mkdir release
 cd release/
 
 # Clone it
-git clone --quiet https://${GITHUB_USER_NAME}:${GITHUB_TOKEN}@github.com/RaymondBenc/socialengine-console.git . > /dev/null
+git clone --quiet https://${GITHUB_USER_NAME}:${GITHUB_TOKEN}@github.com/redmatterio/socialengine-console.git . > /dev/null
 git config --global user.email $GITHUB_USER_EMAIL
 git config --global user.name $GITHUB_USER_NAME
 
