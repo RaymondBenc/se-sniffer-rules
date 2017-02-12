@@ -18,30 +18,34 @@ if (isset($options['path'])) {
     $config['path'] = rtrim($options['path'], '/') . '/';
 }
 
-if (!file_exists($autoload)) {
-    $autoload = $path . 'application/vendor/autoload.php';
-} else {
-    spl_autoload_register(function ($class) {
-        $prefix = 'SocialEngine\\Console\\';
-        $base = __DIR__ . '/../src/';
-        $len = strlen($prefix);
+spl_autoload_register(function ($class) {
+    $prefix = 'SocialEngine\\Console\\';
+    $base = __DIR__ . '/../src/';
+    $len = strlen($prefix);
 
-        if (strncmp($prefix, $class, $len) !== 0) {
-            return;
-        }
+    if (strncmp($prefix, $class, $len) !== 0) {
+        return;
+    }
 
-        $relativeClass = substr($class, $len);
-        $file = $base . str_replace('\\', '/', $relativeClass) . '.php';
+    $relativeClass = substr($class, $len);
+    $file = $base . str_replace('\\', '/', $relativeClass) . '.php';
 
-        if (file_exists($file)) {
-            require $file;
-        }
-    });
-}
-
-require($autoload);
+    if (file_exists($file)) {
+        require $file;
+    }
+});
 
 try {
+    if (!file_exists($autoload)) {
+        $autoload = $path . 'application/vendor/autoload.php';
+    }
+
+    if (!file_exists($autoload)) {
+        throw new Exception('Run composer install first.');
+    }
+
+    require($autoload);
+
     $console = new SocialEngine\Console\Console($config);
     if (isset($options['docgenerator'])) {
         new SocialEngine\Console\Helper\DocGenerator($console);
