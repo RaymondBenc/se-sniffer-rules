@@ -253,8 +253,10 @@ abstract class Command
     public function step($name, \Closure $callback)
     {
         $this->symfony->output->write($name . '...');
-        $callback();
+        $response = $callback();
         $this->symfony->output->write(' <fg=green>Success</>', true);
+
+        return $response;
     }
 
     /**
