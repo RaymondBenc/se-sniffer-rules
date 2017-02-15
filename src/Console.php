@@ -154,8 +154,9 @@ class Console
                                 $this->symfony->addArgument($data);
                                 break;
                             case 'command':
-                                $key = $data . '->' . $method->getName();
-                                $this->symfony = new SymfonyCommand($data, $method->getName());
+                                $methodName = $method->getName();
+                                $key = $data . '->' . $methodName;
+                                $this->symfony = new SymfonyCommand($data, $methodName);
                                 $this->symfony->setName($data);
                                 $this->commands[$key] = $reflection->newInstanceArgs([
                                     $this->symfony,

@@ -59,8 +59,10 @@ class Export extends Command
                 mkdir($temp);
 
                 list($major, $minor, $build) = explode('.', $manifest['package']['version']);
+                /*
                 $minor++;
                 $build = 0;
+                */
                 $manifest['package']['version'] = implode('.', [$major, $minor, $build]);
 
                 $skip = [];
