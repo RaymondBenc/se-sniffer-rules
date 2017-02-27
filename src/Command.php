@@ -55,6 +55,14 @@ abstract class Command
     }
 
     /**
+     * Default action for namespace
+     */
+    public function process()
+    {
+
+    }
+
+    /**
      * Get the commands name.
      *
      * @see \Symfony\Component\Console\Command\Command::getName

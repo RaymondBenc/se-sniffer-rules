@@ -23,6 +23,9 @@ class Reset extends Command
         $this->step('Resetting SE', function () use ($base) {
             $remove = [
                 'application/settings/database.php',
+                'application/settings/cache.php',
+                'application/settings/mail.php',
+                'application/settings/override.php',
                 'temporary/log/import-phpfox.log'
             ];
 
