@@ -97,9 +97,9 @@ class Console
      */
     private function register()
     {
-        defined('APPLICATION_PATH') || define('APPLICATION_PATH', $this->config['path']);
         defined('DS') || define('DS', DIRECTORY_SEPARATOR);
         defined('PS') || define('PS', PATH_SEPARATOR);
+        defined('APPLICATION_PATH') || define('APPLICATION_PATH', rtrim($this->config['path'], '/'));
         defined('_ENGINE') || define('_ENGINE', true);
 
         spl_autoload_register(function ($class) {
@@ -114,6 +114,8 @@ class Console
                 require($path);
             }
         });
+
+        // \Engine_Loader::getInstance()->register('Core', APPLICATION_PATH . '/application/modules/Core');
     }
 
     /**

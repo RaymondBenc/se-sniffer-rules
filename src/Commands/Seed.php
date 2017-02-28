@@ -29,7 +29,7 @@ class Seed extends Command
             for ($i = 0; $i < 10; $i++) {
                 // $this->write($faker->image())
 
-                $userId = $user->make([
+                $user->make([
                     'username' => $faker->userName,
                     'email' => $faker->email,
                     'password' => '123456'

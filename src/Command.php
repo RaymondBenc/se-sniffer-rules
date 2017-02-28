@@ -59,7 +59,6 @@ abstract class Command
      */
     public function process()
     {
-
     }
 
     /**
