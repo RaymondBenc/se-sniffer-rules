@@ -1,5 +1,6 @@
 # Social Engine Console
 
+[![Build Status](https://travis-ci.org/jitflowlab/socialengine-console.svg?branch=master)](https://travis-ci.org/jitflowlab/socialengine-console)
 
 ## Installing
 
