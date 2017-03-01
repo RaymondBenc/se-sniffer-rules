@@ -99,7 +99,7 @@ class Console
     {
         defined('DS') || define('DS', DIRECTORY_SEPARATOR);
         defined('PS') || define('PS', PATH_SEPARATOR);
-        defined('APPLICATION_PATH') || define('APPLICATION_PATH', rtrim($this->config['path'], '/'));
+        defined('APPLICATION_PATH') || define('APPLICATION_PATH', rtrim($this->config['path'], '/') . '/');
         defined('_ENGINE') || define('_ENGINE', true);
 
         spl_autoload_register(function ($class) {
@@ -108,7 +108,7 @@ class Console
                 substr($class, 0, 4) == 'Zend' ||
                 substr($class, 0, 4) == 'Core'
             ) {
-                $this->config['path'] = rtrim($this->config['path'], '/') . '/';
+                // $this->config['path'] = rtrim($this->config['path'], '/') . '/';
                 $path = $this->config['path'] . 'application/libraries/' . $class . '.php';
 
                 require($path);
