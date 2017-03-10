@@ -1,5 +1,5 @@
 {
-    "name": "jitflowlab/socialengine-console",
+    "name": "jitflow/socialengine-console",
     "license": "MIT",
     "version": "1.27",
     "authors": [
@@ -17,7 +17,8 @@
         "squizlabs/php_codesniffer": "^2.7",
         "redmatterio/socialengine-coding-standards": "^1.1",
         "symfony/console": "^3.2",
-        "phpunit/phpunit": "^5.7"
+        "phpunit/phpunit": "^5.7",
+        "fzaninotto/faker": "^1.6"
     },
     "autoload": {
         "psr-4": {

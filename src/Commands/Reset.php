@@ -23,11 +23,16 @@ class Reset extends Command
         $this->step('Resetting SE', function () use ($base) {
             $remove = [
                 'application/settings/database.php',
+                'application/settings/cache.php',
+                'application/settings/mail.php',
+                'application/settings/override.php',
+                'application/libraries/Sentry/',
+                'application/modules/Sentry/',
                 'temporary/log/import-phpfox.log'
             ];
 
             foreach ($remove as $file) {
-                $this->exec('rm -f ' . $base . $file);
+                $this->exec('rm -rf ' . $base . $file);
             }
 
             $packages = $base . 'application/packages/';
