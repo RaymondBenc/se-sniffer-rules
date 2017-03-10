@@ -45,3 +45,8 @@ Purges all auto-created databases.
 Reset your Social Engine script to a clean state.
 
 
+**scan:sql-new-columns**
+
+Scans all modules for a specific version if there are new columns.
+
+
